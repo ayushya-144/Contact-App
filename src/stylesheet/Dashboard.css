@@ -1,0 +1,57 @@
+.contact-container {
+  display: flex;
+}
+.contact-panel {
+  min-height: 91.3vh;
+  max-height: 91.3vh;
+  width: 20vw;
+  background-color: whitesmoke;
+  border: 1px solid #408ec6;
+}
+.search-section {
+  height: 10%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid #408ec6;
+}
+.search-bar {
+  padding: 3%;
+  border-radius: 8px;
+  border: 1px solid #408ec6;
+  box-shadow: 0px 1px 1px rgb(204, 202, 202);
+}
+.search-bar:focus {
+  outline: 2px solid #1e2761;
+}
+.contact-body {
+  border-top: 1px solid #408ec6;
+  background-color: white;
+  width: 80vw;
+  min-height: 91.3vh;
+  max-height: 91.3vh;
+}
+
+/* css for modal popup */
+
+.modal-popup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #408ec6;
+  padding: 3%;
+  width: 40%;
+  border-radius: 10px;
+}
+.modal-close {
+  top: 0;
+  right: 0;
+  position: absolute;
+  padding: 0.4% 2%;
+  text-align: end;
+  float: right;
+  box-shadow: none;
+}

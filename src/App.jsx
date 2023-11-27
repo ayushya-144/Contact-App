@@ -1,15 +1,25 @@
 import "./stylesheet/App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Navigationbar from "./Components/Navigationbar";
+import NavigationBar from "./Components/NavigationBar";
 import SignUp from "./Components/SignUp";
-// import LogIn from "./Components/LogIn";
+import LogIn from "./Components/LogIn";
+import { Route, Routes } from "react-router-dom";
+import Dashboard from "./Components/Dashboard";
+import NavbarHandler from "./Components/NavbarHandler";
+import ErrorPage from "./Components/ErrorPage";
 
 function App() {
   return (
     <>
-      <Navigationbar />
-      {/* <LogIn /> */}
-      <SignUp />
+      <NavbarHandler>
+        <NavigationBar />
+      </NavbarHandler>
+      <Routes>
+        <Route path="/SignUp" element={<SignUp />} />
+        <Route path="/" element={<LogIn />} />
+        <Route path="/Dashboard/:userEmail" element={<Dashboard />} />
+        <Route path="*" element={<ErrorPage />} />
+      </Routes>
     </>
   );
 }
