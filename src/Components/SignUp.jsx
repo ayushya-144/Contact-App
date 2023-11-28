@@ -1,78 +1,57 @@
-import { useState } from "react";
+// import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import "../stylesheet/SignInSignUp.css";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
+const schema = yup.object({
+  email: yup.string().email("Enter a valid email").required("Enter an email"),
+  password: yup
+    .string()
+    .min(8, "Password cannot be less than 8 characters")
+    .required("Enter a password"),
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref("password"), null], "Password must match")
+    .required("Confirm your password"),
+});
 
 export default function SignUp() {
   const navigate = useNavigate();
-  const [inputVal, setInputVal] = useState({
-    email: "",
-    password: "",
-    confirmPassword: "",
+
+  const signUpForm = useForm({
+    resolver: yupResolver(schema),
+    mode: "onChange",
   });
-  const handleGetData = (e) => {
-    const { value, name } = e.target;
-    setInputVal(() => {
-      return {
-        ...inputVal,
-        [name]: value,
-      };
-    });
-  };
-  const handleAddData = (e) => {
-    e.preventDefault();
-    const data =
+  const { register, handleSubmit, formState } = signUpForm;
+  const { errors } = formState;
+
+  const onSubmit = (data) => {
+    console.log(data);
+    const contactData =
       JSON.parse(localStorage.getItem("contactData")) === null
         ? []
         : JSON.parse(localStorage.getItem("contactData"));
-    const result = handleValidation(data);
-    if (result) {
-      delete inputVal.confirmPassword;
-      // console.log(inputVal);
-      localStorage.setItem("contactData", JSON.stringify([...data, inputVal]));
-      navigate("/");
-    }
-  };
-  const handleValidation = (data) => {
-    const { email, password, confirmPassword } = inputVal;
-    let result = false;
-    if (data.length && data !== null) {
-      for (let i = 0; i < data.length; i++) {
-        if (data[i].email == email) {
-          alert("this email is already in use!");
-          return false;
-        }
+    let isExistingEmail = false;
+    for (let i = 0; i < contactData.length; i++) {
+      if (contactData[i].email === data.email) {
+        isExistingEmail = true;
+        break;
       }
     }
-    if (email === "") {
-      handleSpanValidation("email", "email field is required");
-    } else if (!email.includes("@")) {
-      handleSpanValidation("email", "enter valid email");
-    } else if (password === "") {
-      handleSpanValidation("password", "enter valid password");
-    } else if (password.length < 8) {
-      handleSpanValidation(
-        "password",
-        "password length cannot be less than 8 characters"
+    if (!isExistingEmail) {
+      delete data.confirmPassword;
+      localStorage.setItem(
+        "contactData",
+        JSON.stringify([...contactData, data])
       );
-    } else if (confirmPassword !== password) {
-      handleSpanValidation(
-        "confirmPassword",
-        "Confirm Password do not match with current password"
-      );
+      navigate("/");
     } else {
-      result = true;
+      alert(
+        `${data.email} already exists! Login Instead or try using another email`
+      );
     }
-    return result;
-  };
-
-  const handleSpanValidation = (name, validationText) => {
-    const elements = document.getElementsByClassName("validation");
-    for (let i = 0; i < elements.length; i++) {
-      elements[i].innerHTML = "";
-      elements[i].style.display = "none";
-    }
-    document.getElementById(`validate-${name}`).style.display = "block";
-    document.getElementById(`validate-${name}`).innerHTML = validationText;
   };
 
   return (
@@ -81,36 +60,40 @@ export default function SignUp() {
         <h1>Sign Up</h1>
       </div>
       <div className="login-body">
-        <form className="login-form">
+        <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
           <div className="login-input">
             <input
               type="text"
-              name="email"
-              onChange={handleGetData}
+              {...register("email")}
               placeholder="Email Address"
             />
-            <span className="validation" id="validate-email"></span>
+            <span className="validation" id="validate-email">
+              {errors.email?.message}
+            </span>
           </div>
           <div className="login-input">
             <input
               type="password"
+              {...register("password")}
               name="password"
-              onChange={handleGetData}
               placeholder="Password"
             />
-            <span className="validation" id="validate-password"></span>
+            <span className="validation" id="validate-password">
+              {errors.password?.message}
+            </span>
           </div>
           <div className="login-input">
             <input
               type="password"
-              name="confirmPassword"
-              onChange={handleGetData}
+              {...register("confirmPassword")}
               placeholder="Confirm Password"
             />
-            <span className="validation" id="validate-confirmPassword"></span>
+            <span className="validation" id="validate-confirmPassword">
+              {errors.confirmPassword?.message}
+            </span>
           </div>
           <div className="login-input">
-            <input type="submit" onClick={handleAddData} value="Sign Up" />
+            <input type="submit" value="Sign Up" />
           </div>
           <div className="login-input">
             <p>
