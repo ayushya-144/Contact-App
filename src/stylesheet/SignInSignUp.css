@@ -35,16 +35,7 @@
   margin-bottom: 5%;
   text-align: center;
 }
-.login-input > input {
-  border: none;
-  outline: 1px solid #1e2761;
-  border-radius: 10px;
-  padding: 1%;
-  width: 100%;
-}
-.login-input > input[type="submit"] {
-  width: 20%;
-}
+
 .login-input > input:focus {
   outline: 2px solid #1e2761;
   box-shadow: 0 0 8px #1e2761;
@@ -55,4 +46,16 @@
   font-style: italic;
   text-align: left;
   margin-left: 1%;
+}
+.btn-submit {
+  border: none;
+  outline: 2px solid #1e2761;
+  border-radius: 10px;
+  padding: 1%;
+  width: 20%;
+}
+.btn-submit:hover {
+  outline: 2px solid orange;
+  background-color: #1e2761;
+  color: #fff;
 }

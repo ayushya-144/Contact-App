@@ -1,6 +1,8 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import FloatingLabel from "react-bootstrap/FloatingLabel";
+import Form from "react-bootstrap/Form";
 import * as yup from "yup";
 
 const schema = yup.object({
@@ -40,39 +42,43 @@ export default function LogIn() {
         <h1>Log In</h1>
       </div>
       <div className="login-body">
-        <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
-          <div className="login-input">
-            <input
-              type="text"
-              name="email"
-              {...register("email")}
-              placeholder="Email Address"
-            />
-            <span className="validation" id="validate-email">
-              {errors.email?.message}
-            </span>
-          </div>
-          <div className="login-input">
-            <input
-              type="password"
-              name="password"
-              {...register("password")}
-              placeholder="Password"
-            />
-            <span className="validation" id="validate-password">
-              {errors.password?.message}
-            </span>
-          </div>
-          <div className="login-input">
-            <input type="submit" value="Log In" />
-          </div>
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <Form.Group className="mb-3">
+            <FloatingLabel label="Email address" className="mb-3">
+              <Form.Control
+                type="text"
+                name="email"
+                {...register("email")}
+                placeholder="Email Address"
+              />
+              <Form.Text className="text-danger">
+                {errors.email?.message}
+              </Form.Text>
+            </FloatingLabel>
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <FloatingLabel label="Password" className="mb-3">
+              <Form.Control
+                type="password"
+                name="password"
+                {...register("password")}
+                placeholder="Password"
+              />
+              <Form.Text className="text-danger">
+                {errors.password?.message}
+              </Form.Text>
+            </FloatingLabel>
+          </Form.Group>
+          <Form.Group className="mb-3 login-input">
+            <input className="btn-submit" type="submit" value="Log In" />
+          </Form.Group>
           <div className="login-input">
             <p>
               <i>Don&apos;t have an account? </i>
               <NavLink to="/SignUp">Sign Up</NavLink>
             </p>
           </div>
-        </form>
+        </Form>
       </div>
     </div>
   );
