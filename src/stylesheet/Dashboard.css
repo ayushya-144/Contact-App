@@ -18,7 +18,8 @@
   height: 5rem;
   width: 5rem;
 }
-.card-contact-image {
+.card-contact-image,
+#profile-pic {
   height: 5rem;
   width: 5rem;
   object-fit: cover;

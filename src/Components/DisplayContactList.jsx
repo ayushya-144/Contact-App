@@ -14,7 +14,10 @@ export default function ContactList({
   let userContacts = [];
   if (query !== "") {
     userContacts = allContacts.filter((contact) => {
-      return contact["name"].toLowerCase().includes(query.toLowerCase());
+      return (
+        contact["name"].toLowerCase().includes(query.toLowerCase()) ||
+        contact["email"].toLowerCase().includes(query.toLowerCase())
+      );
     });
   } else {
     userContacts = allContacts;
@@ -37,8 +40,8 @@ export default function ContactList({
   const handleEditContact = (contactId) => {
     const userDetails = filterUserSessionWise();
     const userContacts = userDetails[0]["personalContacts"];
+    setShowContactForm(true);
     for (let i = 0; i < userContacts.length; i++) {
-      setShowContactForm(true);
       if (userContacts[i]["contactId"] === contactId) {
         for (const key in userContacts[i]) {
           setValue(key, userContacts[i][key], {

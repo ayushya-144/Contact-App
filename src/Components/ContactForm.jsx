@@ -12,6 +12,7 @@ export default function ContactForm({
   showContactForm,
   setShowContactForm,
   isEdit,
+  getValues,
 }) {
   return (
     <>
@@ -84,6 +85,12 @@ export default function ContactForm({
               >
                 <Form.Control type="file" {...register("contactImage")} />
               </FloatingLabel>
+              <img
+                id="profile-pic"
+                name="contact-profile"
+                src={getValues("contactImage")}
+                alt="someone"
+              />
               <Form.Text className="text-danger">
                 {errors.contactImage?.message}
               </Form.Text>
@@ -95,7 +102,7 @@ export default function ContactForm({
               }}
               type="button"
             >
-              Reset Field
+              Reset
             </Button>
             <Button variant="primary float-end mx-1" type="submit">
               Save

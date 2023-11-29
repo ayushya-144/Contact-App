@@ -37,7 +37,8 @@ export default function Dashboard() {
   });
 
   //destructuring form
-  const { register, handleSubmit, formState, reset, setValue } = contactForm;
+  const { register, handleSubmit, formState, reset, setValue, getValues } =
+    contactForm;
   const { errors } = formState;
 
   //insert or update method for Contacts
@@ -124,6 +125,7 @@ export default function Dashboard() {
           setShowContactForm={setShowContactForm}
           setIsEdit={setIsEdit}
           isEdit={isEdit}
+          getValues={getValues}
         />
         <DisplayContactList
           filterUserSessionWise={filterUserSessionWise}

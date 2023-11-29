@@ -18,7 +18,10 @@ export default function ContactNavbar({
       <Navbar bg="light" data-bs-theme="light">
         <Container>
           <Navbar.Brand>
-            Welcome {sessionStorage.getItem("userSession")}
+            Welcome{" "}
+            <span style={{ userSelect: "none", color: "#408ec6" }}>
+              {sessionStorage.getItem("userSession")}
+            </span>
           </Navbar.Brand>
           <Nav className="me-right">
             <Row>
