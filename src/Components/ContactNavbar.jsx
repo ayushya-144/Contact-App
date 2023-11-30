@@ -20,7 +20,10 @@ export default function ContactNavbar({
           <Navbar.Brand>
             Welcome{" "}
             <span style={{ userSelect: "none", color: "#408ec6" }}>
-              {sessionStorage.getItem("userSession")}
+              {sessionStorage
+                .getItem("userSession")
+                .toUpperCase()
+                .split("@GMAIL.COM")}
             </span>
           </Navbar.Brand>
           <Nav className="me-right">

@@ -13,7 +13,16 @@ export default function ContactForm({
   setShowContactForm,
   isEdit,
   getValues,
+  getBase64Image,
 }) {
+  async function handleImageDisplay(e) {
+    if (e.target.files[0]) {
+      const contactImage = await getBase64Image(e.target.files["0"]);
+      document.getElementById("profile-pic").src = contactImage;
+    } else {
+      document.getElementById("profile-pic").src = "";
+    }
+  }
   return (
     <>
       <Modal
@@ -83,17 +92,21 @@ export default function ContactForm({
                 label="Image"
                 className="mb-3"
               >
-                <Form.Control type="file" {...register("contactImage")} />
+                <Form.Control
+                  onInput={(e) => handleImageDisplay(e)}
+                  type="file"
+                  {...register("contactImage")}
+                />
               </FloatingLabel>
               <img
                 id="profile-pic"
                 name="contact-profile"
                 src={getValues("contactImage")}
-                alt="someone"
+                alt="No Image Selected"
               />
-              <Form.Text className="text-danger">
+              {/* <Form.Text className="text-danger">
                 {errors.contactImage?.message}
-              </Form.Text>
+              </Form.Text> */}
             </Form.Group>
             <Button
               variant="danger float-end"

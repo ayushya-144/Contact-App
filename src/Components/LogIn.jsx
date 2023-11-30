@@ -4,19 +4,30 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
 import * as yup from "yup";
+import { UseAuth } from "../utils/auth";
+import { Navigate } from "react-router-dom";
 
 const schema = yup.object({
-  email: yup.string().email("Enter an email").required("Email is required"),
+  email: yup
+    .string()
+    .email("Enter a valid email")
+    .required("Email is required"),
   password: yup.string().required("Enter your password"),
 });
 
 export default function LogIn() {
   const navigate = useNavigate();
+  const auth = UseAuth();
 
   const logInForm = useForm({
     resolver: yupResolver(schema),
-    mode: "onChange",
+    mode: "onBlur",
   });
+
+  if (sessionStorage.getItem("userSession") != null) {
+    return <Navigate to="/Dashboard"></Navigate>;
+  }
+  sessionStorage.clear();
 
   const { register, handleSubmit, formState } = logInForm;
   const { errors } = formState;
@@ -28,8 +39,8 @@ export default function LogIn() {
         return el.email === data.email && el.password === data.password;
       });
       if (userLogin && userLogin.length > 0) {
-        sessionStorage.setItem("userSession", data.email);
-        navigate(`/Dashboard`);
+        auth.logIn(data.email);
+        navigate("/Dashboard", { replace: true });
       } else {
         alert("Email Id or Password is incorrect");
       }

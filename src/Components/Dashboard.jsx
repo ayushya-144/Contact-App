@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
-import "../stylesheet/Dashboard.css";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import "../stylesheet/dashboard.css";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { v4 } from "uuid";
@@ -9,6 +8,7 @@ import "yup-phone";
 import ContactNavbar from "./ContactNavbar";
 import ContactForm from "./ContactForm";
 import { validate } from "../utils/validation";
+import { UseAuth } from "../utils/auth";
 
 export default function Dashboard() {
   const [showContactForm, setShowContactForm] = useState(false);
@@ -17,17 +17,8 @@ export default function Dashboard() {
   );
   const [isEdit, setIsEdit] = useState(false);
   const [query, setQuery] = useState("");
-  const navigate = useNavigate();
+  const auth = UseAuth();
 
-  //if user info is not stored in session it will redirect to login page
-  useEffect(() => {
-    if (sessionStorage.getItem("userSession") === "") {
-      console.log("user exist ?", false);
-      navigate("/");
-    }
-  }, [navigate]);
-
-  //useForm Hook
   const contactForm = useForm({
     defaultValues: {
       contactId: "",
@@ -44,24 +35,36 @@ export default function Dashboard() {
   //insert or update method for Contacts
   async function onSubmit(data) {
     let userDetails = filterUserSessionWise();
-    let userContacts = userDetails[0]["personalContacts"];
-    if (userContacts === undefined) {
-      userContacts = [];
+    if (userDetails[0]["personalContacts"] === undefined) {
+      userDetails[0]["personalContacts"] = [];
     }
     if (data.contactId !== "") {
-      for (let i = 0; i < userContacts.length; i++) {
-        if (userContacts[i]["contactId"] == data.contactId) {
-          if (userContacts[i]["contactImage"] !== data.contactImage) {
-            const image = await getBase64Image(data.contactImage[0]);
-            data.contactImage = image;
+      for (let i = 0; i < userDetails[0]["personalContacts"].length; i++) {
+        if (
+          userDetails[0]["personalContacts"][i]["contactId"] == data.contactId
+        ) {
+          if (
+            userDetails[0]["personalContacts"][i]["contactImage"] !==
+            data.contactImage
+          ) {
+            if (data.contactImage[0] !== undefined) {
+              const image = await getBase64Image(data.contactImage[0]);
+              data.contactImage = image;
+            } else {
+              data.contactImage = "";
+            }
           }
-          userContacts[i] = data;
+          userDetails[0]["personalContacts"][i] = data;
         }
       }
     } else {
       data["contactId"] = v4();
-      const image = await getBase64Image(data.contactImage[0]);
-      data.contactImage = image;
+      if (data.contactImage[0] !== undefined) {
+        const image = await getBase64Image(data.contactImage[0]);
+        data.contactImage = image;
+      } else {
+        data.contactImage = "";
+      }
       userDetails[0]["personalContacts"].push(data);
     }
     localStorage.setItem("contactData", JSON.stringify(contactDetails));
@@ -84,12 +87,14 @@ export default function Dashboard() {
   //to convert image to base64
   const getBase64Image = (image) =>
     new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(image);
-      reader.onload = function () {
-        resolve(reader.result);
-        reader.onerror = reject;
-      };
+      if (image !== undefined) {
+        const reader = new FileReader();
+        reader.readAsDataURL(image);
+        reader.onload = function () {
+          resolve(reader.result);
+          reader.onerror = reject;
+        };
+      }
     });
 
   //after every insert or edit contactDetails state will be updated
@@ -98,11 +103,7 @@ export default function Dashboard() {
   };
 
   const handleUserLogout = () => {
-    if (confirm("Are you sure you want to logout")) {
-      console.log("Hello");
-      sessionStorage.clear();
-      navigate("/");
-    }
+    auth.logOut();
   };
 
   return (
@@ -126,6 +127,7 @@ export default function Dashboard() {
           setIsEdit={setIsEdit}
           isEdit={isEdit}
           getValues={getValues}
+          getBase64Image={getBase64Image}
         />
         <DisplayContactList
           filterUserSessionWise={filterUserSessionWise}

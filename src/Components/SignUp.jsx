@@ -1,7 +1,6 @@
-// import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import "../stylesheet/SignInSignUp.css";
+import "../stylesheet/signInSignUp.css";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Form from "react-bootstrap/Form";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
