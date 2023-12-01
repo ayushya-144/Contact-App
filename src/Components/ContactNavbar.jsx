@@ -5,16 +5,35 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import { UseAuth } from "../utils/auth";
+import { useState } from "react";
+import DialogueBox from "./DialogueBox";
 
 export default function ContactNavbar({
-  reset,
   setShowContactForm,
   setIsEdit,
   setQuery,
-  handleUserLogout,
 }) {
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const auth = UseAuth();
+
+  const handleUserLogout = () => {
+    auth.logOut();
+    handleClose;
+  };
   return (
     <>
+      <DialogueBox
+        show={show}
+        handleClose={handleClose}
+        closeBtnTxt={"Close"}
+        showConfirmBtn={true}
+        handleConfirmMethod={handleUserLogout}
+      >
+        Are you sure you want to Log Out?
+      </DialogueBox>
       <Navbar bg="light" data-bs-theme="light">
         <Container>
           <Navbar.Brand>
@@ -33,6 +52,7 @@ export default function ContactNavbar({
                   type="text"
                   placeholder="&#128270; Search"
                   className=" mr-sm-2"
+                  name="searchContacts"
                   onChange={(e) => {
                     setQuery(e.target.value);
                   }}
@@ -42,7 +62,6 @@ export default function ContactNavbar({
                 <Button
                   type="button"
                   onClick={() => {
-                    reset();
                     setShowContactForm(true);
                     setIsEdit(false);
                   }}
@@ -54,7 +73,7 @@ export default function ContactNavbar({
                   type="button"
                   className="mx-1"
                   onClick={() => {
-                    handleUserLogout();
+                    handleShow();
                   }}
                   title="Logout"
                 >

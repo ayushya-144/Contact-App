@@ -12,10 +12,10 @@ function App() {
   return (
     <AuthProvider>
       <Routes>
-        <Route path="/SignUp" element={<SignUp />} />
+        <Route path="/sign-up" element={<SignUp />} />
         <Route path="/" element={<LogIn />} />
         <Route
-          path="/Dashboard"
+          path="/dashboard"
           element={
             <RequiredAuth>
               <Dashboard />

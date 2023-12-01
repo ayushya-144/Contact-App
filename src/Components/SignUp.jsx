@@ -4,7 +4,14 @@ import "../stylesheet/signInSignUp.css";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Form from "react-bootstrap/Form";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
+import {
+  getLocalStorageData,
+  setLocalStorageData,
+} from "../utils/getOrSetLocalStorageData";
+import Button from "react-bootstrap/Button";
 import * as yup from "yup";
+import { useState } from "react";
+import DialogueBox from "./DialogueBox";
 
 const schema = yup.object({
   email: yup.string().email("Enter a valid email").required("Enter an email"),
@@ -20,6 +27,9 @@ const schema = yup.object({
 
 export default function SignUp() {
   const navigate = useNavigate();
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const signUpForm = useForm({
     resolver: yupResolver(schema),
@@ -31,27 +41,21 @@ export default function SignUp() {
   const onSubmit = (data) => {
     console.log(data);
     const contactData =
-      JSON.parse(localStorage.getItem("contactData")) === null
+      getLocalStorageData("contactData") === null
         ? []
-        : JSON.parse(localStorage.getItem("contactData"));
+        : getLocalStorageData("contactData");
     let isExistingEmail = false;
-    for (let i = 0; i < contactData.length; i++) {
-      if (contactData[i].email === data.email) {
-        isExistingEmail = true;
-        break;
+    isExistingEmail = contactData.filter((contact) => {
+      if (contact.email === data.email && contact.password === data.password) {
+        return true;
       }
-    }
+    });
     if (!isExistingEmail) {
       delete data.confirmPassword;
-      localStorage.setItem(
-        "contactData",
-        JSON.stringify([...contactData, data])
-      );
+      setLocalStorageData("contactData", [...contactData, data]);
       navigate("/");
     } else {
-      alert(
-        `${data.email} already exists! Login Instead or try using another email`
-      );
+      handleShow();
     }
   };
 
@@ -61,6 +65,14 @@ export default function SignUp() {
         <h1>Sign Up</h1>
       </div>
       <div className="login-body">
+        <DialogueBox
+          show={show}
+          handleClose={handleClose}
+          closeBtnTxt={"Close"}
+          showConfirmBtn={false}
+        >
+          Email already exists! Login Instead or try using another email!
+        </DialogueBox>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <Form.Group className="mb-3">
             <FloatingLabel label="Email address" className="mb-3">
@@ -100,7 +112,9 @@ export default function SignUp() {
             </FloatingLabel>
           </Form.Group>
           <Form.Group className="mb-3 login-input">
-            <input className="btn-submit" type="submit" value="Sign Up" />
+            <Button variant="outline-primary" type="submit">
+              Sign Up
+            </Button>
           </Form.Group>
           <div className="login-input">
             <p>

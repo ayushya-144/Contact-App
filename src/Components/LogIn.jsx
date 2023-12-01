@@ -6,6 +6,10 @@ import Form from "react-bootstrap/Form";
 import * as yup from "yup";
 import { UseAuth } from "../utils/auth";
 import { Navigate } from "react-router-dom";
+import { getLocalStorageData } from "../utils/getOrSetLocalStorageData";
+import Button from "react-bootstrap/Button";
+import DialogueBox from "./DialogueBox";
+import { useState } from "react";
 
 const schema = yup.object({
   email: yup
@@ -16,6 +20,10 @@ const schema = yup.object({
 });
 
 export default function LogIn() {
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   const navigate = useNavigate();
   const auth = UseAuth();
 
@@ -33,16 +41,16 @@ export default function LogIn() {
   const { errors } = formState;
 
   const onSubmit = (data) => {
-    const userData = JSON.parse(localStorage.getItem("contactData"));
+    const userData = getLocalStorageData("contactData");
     if (userData && userData.length > 0) {
       const userLogin = userData.filter((el) => {
         return el.email === data.email && el.password === data.password;
       });
       if (userLogin && userLogin.length > 0) {
         auth.logIn(data.email);
-        navigate("/Dashboard", { replace: true });
+        navigate("/dashboard", { replace: true });
       } else {
-        alert("Email Id or Password is incorrect");
+        handleShow();
       }
     }
   };
@@ -53,6 +61,14 @@ export default function LogIn() {
         <h1>Log In</h1>
       </div>
       <div className="login-body">
+        <DialogueBox
+          show={show}
+          handleClose={handleClose}
+          closeBtnTxt={"Close"}
+          showConfirmBtn={false}
+        >
+          Email Id or Password is incorrect
+        </DialogueBox>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <Form.Group className="mb-3">
             <FloatingLabel label="Email address" className="mb-3">
@@ -81,12 +97,14 @@ export default function LogIn() {
             </FloatingLabel>
           </Form.Group>
           <Form.Group className="mb-3 login-input">
-            <input className="btn-submit" type="submit" value="Log In" />
+            <Button variant="outline-primary" type="submit">
+              Log In
+            </Button>
           </Form.Group>
           <div className="login-input">
             <p>
               <i>Don&apos;t have an account? </i>
-              <NavLink to="/SignUp">Sign Up</NavLink>
+              <NavLink to="/sign-up">Sign Up</NavLink>
             </p>
           </div>
         </Form>

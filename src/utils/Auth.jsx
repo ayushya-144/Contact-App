@@ -9,10 +9,8 @@ export const AuthProvider = ({ children }) => {
     sessionStorage.setItem("userSession", email);
   };
   const logOut = () => {
-    if (confirm("Are you sure you want to logout")) {
-      sessionStorage.clear();
-      navigate("/");
-    }
+    sessionStorage.clear();
+    navigate("/");
   };
   return (
     <AuthContext.Provider value={{ logIn, logOut }}>

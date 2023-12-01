@@ -1,5 +1,7 @@
 import Card from "react-bootstrap/Card";
 import Table from "react-bootstrap/Table";
+import { setLocalStorageData } from "../utils/getOrSetLocalStorageData";
+
 export default function ContactList({
   filterUserSessionWise,
   setValue,
@@ -8,6 +10,7 @@ export default function ContactList({
   updateContactDetails,
   setIsEdit,
   query,
+  setImageSrc,
 }) {
   const userDetails = filterUserSessionWise();
   const allContacts =
@@ -33,7 +36,8 @@ export default function ContactList({
           userContacts.splice(i, 1);
         }
       }
-      localStorage.setItem("contactData", JSON.stringify(contactDetails));
+
+      setLocalStorageData("contactData", contactDetails);
       updateContactDetails();
     }
   };
@@ -48,6 +52,9 @@ export default function ContactList({
             shouldTouch: true,
             shouldValidate: true,
           });
+          if (key === "contactImage") {
+            setImageSrc(userContacts[i][key]);
+          }
         }
       }
     }
@@ -84,6 +91,9 @@ export default function ContactList({
                           <Card className="image-card">
                             <Card.Img
                               className="card-contact-image"
+                              hidden={
+                                contact.contactImage === "" ? true : false
+                              }
                               src={contact.contactImage}
                             />
                           </Card>
