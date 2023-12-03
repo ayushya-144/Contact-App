@@ -39,17 +39,18 @@ export default function SignUp() {
   const { errors } = formState;
 
   const onSubmit = (data) => {
-    console.log(data);
     const contactData =
       getLocalStorageData("contactData") === null
         ? []
         : getLocalStorageData("contactData");
     let isExistingEmail = false;
-    isExistingEmail = contactData.filter((contact) => {
+    console.log("bool", isExistingEmail);
+    contactData.filter((contact) => {
       if (contact.email === data.email && contact.password === data.password) {
-        return true;
+        isExistingEmail = true;
       }
     });
+    console.log("bool", isExistingEmail);
     if (!isExistingEmail) {
       delete data.confirmPassword;
       setLocalStorageData("contactData", [...contactData, data]);
