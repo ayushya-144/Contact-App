@@ -5,7 +5,7 @@ import LogIn from "../pages/user-registration/LogIn.jsx";
 import Dashboard from "../pages/dashboard/Dashboard.jsx";
 import ErrorPage from "../pages/error-page/ErrorPage.jsx";
 import { RequiredAuth } from "../context/RequiredAuth.jsx";
-import { AuthProvider } from "../context/Auth.jsx";
+import { AuthProvider } from "../context/auth.jsx";
 
 export default function RoutingPage() {
   return (
