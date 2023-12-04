@@ -39,21 +39,20 @@ export default function SignUp() {
   const { errors } = formState;
 
   const onSubmit = (data) => {
+    console.log(data);
     const contactData =
       getLocalStorageData("contactData") === null
         ? []
         : getLocalStorageData("contactData");
     let isExistingEmail = false;
-    console.log("bool", isExistingEmail);
-    contactData.filter((contact) => {
+    isExistingEmail = contactData.filter((contact) => {
       if (contact.email === data.email && contact.password === data.password) {
-        isExistingEmail = true;
+        return true;
       }
     });
-    console.log("bool", isExistingEmail);
     if (!isExistingEmail) {
       delete data.confirmPassword;
-      setLocalStorageData("contactData", [...contactData, data]), 1000;
+      setLocalStorageData("contactData", [...contactData, data]);
       navigate("/");
     } else {
       handleShow();
@@ -128,3 +127,4 @@ export default function SignUp() {
     </div>
   );
 }
+// https://www.youtube.com/watch?v=fMTSQ6K_Oh0
