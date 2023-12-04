@@ -22,7 +22,7 @@ export default function DialogueBox({
           </Button>
           {showConfirmBtn && (
             <Button variant="primary" onClick={handleConfirmMethod}>
-              Okay
+              Confirm
             </Button>
           )}
         </Modal.Footer>

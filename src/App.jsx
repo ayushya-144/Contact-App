@@ -1,31 +1,8 @@
 import "./stylesheet/app.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-import SignUp from "./Components/SignUp";
-import LogIn from "./Components/LogIn";
-import { Route, Routes } from "react-router-dom";
-import Dashboard from "./Components/Dashboard";
-import ErrorPage from "./Components/ErrorPage";
-import { RequiredAuth } from "./utils/RequiredAuth";
-import { AuthProvider } from "./utils/auth.jsx";
+import RoutingPage from "./components/RoutingPage.jsx";
 
 function App() {
-  return (
-    <AuthProvider>
-      <Routes>
-        <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/" element={<LogIn />} />
-        <Route
-          path="/dashboard"
-          element={
-            <RequiredAuth>
-              <Dashboard />
-            </RequiredAuth>
-          }
-        />
-        <Route path="*" element={<ErrorPage />} />
-      </Routes>
-    </AuthProvider>
-  );
+  return <RoutingPage />;
 }
 
 export default App;

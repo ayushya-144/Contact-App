@@ -1,10 +1,10 @@
 import { useState } from "react";
-import "../stylesheet/dashboard.css";
+import "./dashboard.css";
 import "yup-phone";
-import ContactNavbar from "./ContactNavbar";
-import ContactBody from "./ContactBody";
+import ContactNavbar from "./components/ContactNavbar";
+import ContactBody from "./components/ContactBody";
 
-import { getLocalStorageData } from "../utils/getOrSetLocalStorageData";
+import { getLocalStorageData } from "../../utils/getOrSetLocalStorageData";
 
 export default function Dashboard() {
   const [showContactForm, setShowContactForm] = useState(false);

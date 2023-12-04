@@ -5,9 +5,9 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import { UseAuth } from "../utils/auth";
+import { UseAuth } from "../../../context/Auth";
 import { useState } from "react";
-import DialogueBox from "./DialogueBox";
+import DialogueBox from "../../dialogue-box/DialogueBox";
 
 export default function ContactNavbar({
   setShowContactForm,

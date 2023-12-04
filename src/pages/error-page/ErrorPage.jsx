@@ -1,4 +1,4 @@
-import "../stylesheet/error.css";
+import "./error.css";
 export default function ErrorPage() {
   return (
     <div className="error-page">

@@ -1,6 +1,8 @@
 import Card from "react-bootstrap/Card";
 import Table from "react-bootstrap/Table";
-import { setLocalStorageData } from "../utils/getOrSetLocalStorageData";
+import { setLocalStorageData } from "../../../utils/getOrSetLocalStorageData";
+import DialogueBox from "../../dialogue-box/DialogueBox";
+import { useRef, useState } from "react";
 
 export default function ContactList({
   filterUserSessionWise,
@@ -13,11 +15,15 @@ export default function ContactList({
   setImageSrc,
 }) {
   const userDetails = filterUserSessionWise();
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const refId = useRef();
   const allContacts =
     userDetails.length > 0 ? userDetails[0]["personalContacts"] : "";
   let userContacts = [];
   if (query !== "") {
-    if (allContacts.length > 0) {
+    if (allContacts?.length > 0) {
       userContacts = allContacts.filter((contact) => {
         return (
           contact["name"].toLowerCase().includes(query.toLowerCase()) ||
@@ -29,17 +35,21 @@ export default function ContactList({
     userContacts = allContacts;
   }
 
-  const handleDeleteContact = (contactId) => {
-    if (confirm("Are you sure you want to delete this contact")) {
-      for (let i = 0; i < userContacts.length; i++) {
-        if (contactId == userContacts[i]["contactId"]) {
-          userContacts.splice(i, 1);
-        }
+  const handleDeleteDialogueBox = (contactId) => {
+    refId.current = contactId;
+    handleShow();
+  };
+  const handleDeleteContact = () => {
+    for (let i = 0; i < userContacts.length; i++) {
+      if (refId.current == userContacts[i]["contactId"]) {
+        userContacts.splice(i, 1);
       }
-
-      setLocalStorageData("contactData", contactDetails);
-      updateContactDetails();
     }
+
+    setLocalStorageData("contactData", contactDetails);
+    updateContactDetails();
+    refId.current = null;
+    handleClose();
   };
 
   const handleEditContact = (contactId) => {
@@ -63,6 +73,15 @@ export default function ContactList({
 
   return (
     <>
+      <DialogueBox
+        show={show}
+        handleClose={handleClose}
+        closeBtnTxt={"Close"}
+        showConfirmBtn={true}
+        handleConfirmMethod={handleDeleteContact}
+      >
+        Are you sure you want to delete the contact
+      </DialogueBox>
       {userContacts?.length > 0 ? (
         <div className="contact-body">
           <div className="contact-table">
@@ -110,7 +129,7 @@ export default function ContactList({
                           <button
                             className="btn btn-danger mx-1"
                             onClick={() => {
-                              handleDeleteContact(contact.contactId);
+                              handleDeleteDialogueBox(contact.contactId);
                             }}
                           >
                             Delete

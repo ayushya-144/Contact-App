@@ -4,12 +4,12 @@ import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Modal from "react-bootstrap/Modal";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { validate } from "../utils/validation";
+import { validate } from "../../../utils/validation";
 import DisplayContactList from "./DisplayContactList";
 import {
   getLocalStorageData,
   setLocalStorageData,
-} from "../utils/getOrSetLocalStorageData";
+} from "../../../utils/getOrSetLocalStorageData";
 import { v4 } from "uuid";
 import { useState } from "react";
 
@@ -63,7 +63,6 @@ export default function ContactBody({
     setLocalStorageData("contactData", contactDetails);
     reset();
     setShowContactForm(false);
-    updateContactDetails();
     setImageSrc();
     setIsEdit(false);
 
@@ -141,7 +140,7 @@ export default function ContactBody({
                 <Form.Control
                   placeholder="Enter your name"
                   type="text"
-                  autoComplete="off"
+                  autoComplete="on"
                   id="contactName"
                   {...register("name")}
                 />
@@ -155,7 +154,7 @@ export default function ContactBody({
                 <Form.Control
                   placeholder="Enter your email"
                   type="email"
-                  autoComplete="off"
+                  autoComplete="on"
                   id="contactEmail"
                   {...register("email")}
                 />
@@ -199,6 +198,7 @@ export default function ContactBody({
             </Form.Group>
             <Button
               variant="danger float-end"
+              hidden={isEdit ? true : false}
               onClick={() => {
                 reset();
               }}
